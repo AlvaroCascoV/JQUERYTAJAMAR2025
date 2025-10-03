@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma de botones (practica2)</title>
+</head>
+<body>
+
+<!--Al iniciar la página generamos 10 botones (por ejemplo) dinámicamente.
+    Cada botón tendrá un número generado con un random() con el texto "Número XX"
+    Al pulsar cada botón, iremos sumando en un triste <h1> cada valor del botón pulsado. -->
+
+    <h1>Sumar botones</h1>
+    <div id="contenedor"></div>
+    <hr/>
+    <h1 id="resultado"></h1>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#resultado").text("0");
+            for(var i=1; i<=10; i++){
+                //genero los 10 botones con su numero y texto
+                var boton = $("<button>");
+                var numero = Math.floor(Math.random()*100)+1;
+                boton.text("Número " + numero)
+                //añado los botones al contenedor
+                $("#contenedor").append(boton);
+                //evento click para sumar el numero del boton al h1
+                $(boton).click(function(){
+                    var suma = parseInt($("#resultado").text());
+                    suma += parseInt($(this).text().split(" ")[1]);
+                    $("#resultado").text(suma);
+                })
+            }
+        })
+    </script>
+</body>
+</html>
