@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtros en XML</title>
+</head>
+<body>
+
+    <h1>Filtros XML</h1>
+    <label>Introduzca ID:</label>
+    <input type="text" id="cajaid"/>
+    <button id="botonatributo">Buscar atributo ID</button>
+    <hr/>
+    <label>Introduzca localidad</label>
+    <input type="text" id="cajalocalidad"/>
+    <button id="botonlocalidad">Buscar localidad contains</button>
+    <hr/>
+    <h1 style="color: fuchsia;" id="mensaje"></h1>
+    <ul id="listadepartamentos"></ul>
+    
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonatributo").click(function(){
+                $.get("documents/departamentos.xml", function(data){
+                    console.log("Leyendo...");
+                    //EL FILTRO SERA EL SIGUIENTE: DEPT[DEPT_NO=10]
+                    var id = $("#cajaid").val();
+                    var filtro = "DEPT[DEPT_NO=" + id + "]";
+                    //SOLAMENTE TENEMOS UN ID POR DEPARTAMENTO
+                    var nododept = $(data).find(filtro).first();
+                    var nombre = $(nododept).find("DNOMBRE").text();
+                    var localidad = $(nododept).find("LOC").text();
+                    $("#mensaje").text("Departamento: " + nombre + ", Localidad: " + localidad);
+                })
+            })
+
+            $("#botonlocalidad").click(function(){
+                $.get("documents/departamentos.xml",function(data){
+                    console.log("leyendo...");
+                    var localidad = $("#cajalocalidad").val().toUpperCase();
+                    var filtro = "LOC:contains(" + localidad + ")";
+                    //SON VARIOS LOS ELEMENTOS QUE PODRIA DEVOLVER (each)
+                    var html="";
+                    $(data).find(filtro).each(function(){
+                        //devolvemos el nombre y el id del departamento
+                        var cosa = $(this).parent().find("DNOMBRE").text();
+                        var deptid = $(this).parent().attr("DEPT_NO");
+                        //dibujamos la informacion
+                        html += "<li> Departamento: " + cosa + "; Número de dept: "+ deptid + "</li>";
+                    })
+                    //si no hay dibujo de info es que no hay departamentos allí
+                    if(html==""){
+                        html="<li>No hay departamentos en esa localidad</li>";
+                    }
+                    //imprimimos
+                    $("#listadepartamentos").html(html);
+                })
+            })
+        })
+    </script>
+</body>
+</html>
