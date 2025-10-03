@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atributos sin valor (is y prop)</title>
+    <title>Atributos sin valor (:checked con each)</title>
 </head>
 <body>
     <!-- Tendremos una página con un rango para generar controles CHECKBOX 
@@ -40,14 +40,12 @@
                     $("#contenedor").append(label);
 
                     chk.change(function(){
-                        var resultado = parseInt($("#resultado").text());
-                        var valor = parseInt($(this).val());
-                        //PREGUNTAMOS POR EL ESTADO DEL CHECKBOX
-                        if($(this).is(":checked") == true){
+                        var resultado = 0;
+                        //SUMAMOS SOLAMENTE LOS CONTROLES CHECKEADOS
+                        $("input[type=checkbox]:checked").each(function(){
+                            var valor = parseInt($(this).val());
                             resultado += valor;
-                        }else if($(this).prop("checked") == false){
-                            resultado -= valor;
-                        }
+                        })
                         $("#resultado").text(resultado);
                     })
                 }
