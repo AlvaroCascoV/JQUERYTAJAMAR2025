@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peticiones externas clientes con filtro en endpoint</title>
+</head>
+<body>
+
+    <h1>Clientes XML</h1>
+    <div id="contenedorBotones"></div>
+    <hr/>
+    <div id="contenedor"></div>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            //Dibujaremos dinamicamente al iniciar la aplicacion un boton para cada cliente
+            //Al pulsar un boton, mostraremos los datos del cliente seleccionado
+
+            let url = "https://apiclientesxml.azurewebsites.net";
+            let request = "/api/clientes/";
+
+            $.get(url + request, function(data){
+                console.log("Cargando clientes...");
+                $(data).find("Cliente").each(function(){
+                    var nombre = $(this).find("Nombre").text();
+                    var idCliente = parseInt($(this).find("IdCliente").text());
+                    var boton = $("<button>", {text: nombre, id: idCliente});
+                    $(boton).appendTo("#contenedorBotones");
+                })
+                $("button").click(function(){
+                    var id = $(this).attr("id");
+                    var html = "";
+                    var endpoint = id;
+
+                    $("#contenedor").html("");
+                    $.get(url+request+endpoint, function(data){
+                        console.log("leyendo boton "+endpoint)
+                        
+                        var nombre = $(data).find("Nombre").text();
+                        var mail = $(data).find("Email").text();
+                        var imagencliente = $(data).find("Imagen").text();
+
+                        html += "<h2 style='color:red'>" + nombre + "</h2>";
+                        html += "<p>" + mail + "</p>";
+                        html += "<img src='" + imagencliente + "' style='width:150px; height:250px'>";
+                        $("#contenedor").html(html);
+                    })
+                })
+            })
+        })
+    </script>
+</body>
+</html>
