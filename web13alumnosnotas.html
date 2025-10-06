@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practica lunes por la mañana</title>
+</head>
+<body>
+
+    <h1>Notas de alumnos</h1>
+    <label>Introduzca nota:</label>
+    <input type="number" id="cajanota"/>
+    <button id="botonnota">Buscar alumnos</button>
+    <ul id="listaalumnos"></ul>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        //Debemos mostrar los alumnos que han sacado una nota igual o superior a lo que hemos escrito
+        $(document).ready(function(){
+            $("#botonnota").click(function(){
+                $.get("documents/alumnos.xml", function(data){
+                    console.log("leyendo...");
+                    var filtronota = parseInt($("#cajanota").val());
+                    var html="";
+
+                    $(data).find("alumno").each(function(){
+                        console.log("leyendo alumno...");
+                        var nota = parseInt($(this).find("nota").text());
+
+                        if(nota >= filtronota){
+                            var nombre = $(this).find("nombre").text();
+                            var apellido = $(this).find("apellidos").text();
+                            console.log("Alumno: " + nombre + ", Nota: " + nota);
+                            html += "<li> Alumno: " + nombre + " " + apellido + "; Nota: " + nota + "</li>";
+                        }
+                        $("#listaalumnos").html(html);
+
+                    })
+                })
+            })
+        })
+
+    </script>
+</body>
+</html>
