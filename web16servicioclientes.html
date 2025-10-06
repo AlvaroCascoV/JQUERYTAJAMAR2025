@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peticiones externas clientes</title>
+</head>
+<body>
+
+    <h1>Servicio XML Clientes</h1>
+    <label>Seleccione un cliente</label>
+    <select id="selectcliente"></select>
+    <div id="contenedor"></div>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            //Al iniciar la pagina cargaremos todos los clientes en un desplegable
+            //Al seleccionar un cliente en el desplegable mostraremos datos del cliente seleccionado
+
+            let url = "https://apiclientesxml.azurewebsites.net";
+            let request = "/api/clientes/getclientesxml";
+
+            $.get(url + request, function(data){
+                console.log("leyendo...");
+                $(data).find("CLIENTE").each(function(){
+                    console.log("leyendo ...");
+                    var id = $(this).attr("IDCLIENTE");
+                    var nombre = $(this).find("NOMBRE").text();
+                    var option = $("<option>"); 
+                    option.val(id);
+                    option.text(nombre);
+                    $("#selectcliente").append(option);
+                    })
+                $("#selectcliente").change(function(){
+                    $.get(url + request, function(data){
+                        console.log("leyendo cliente...");
+                        var id = $("#selectcliente").val();
+                        var filtro = "CLIENTE[IDCLIENTE=" + id + "]";
+                        var nodo = $(data).find(filtro).first();
+                        var nombre = nodo.find("NOMBRE").text();
+                        var direccion = nodo.find("DIRECCION").text();
+                        var email = nodo.find("EMAIL").text();
+                        var codigopostal = nodo.find("CODIGOPOSTAL").text();
+                        var paginawweb = nodo.find("PAGINAWEB").text();
+                        var imagencliente = nodo.find("IMAGENCLIENTE").text();
+                        $("#contenedor").html("<h2>Nombre: " + nombre + "</h2><p>Dirección: " + direccion + "</p><p>Correo: " + email + "</p><p>Postal: " + codigopostal + "</p><p>Web: " + paginawweb + "</p><img src='" + imagencliente + "' style='width:150px; height:150px'>");
+                    })
+                })
+            })
+        })
+
+    </script>
+</body>
+</html>
