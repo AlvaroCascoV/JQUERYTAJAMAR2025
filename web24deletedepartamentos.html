@@ -17,22 +17,32 @@
         url = "https://apicruddepartamentospgs.azurewebsites.net/";
         $(document).ready(function(){
             loadDepartamentos();
-            $("button").click(function(){
-                var idDept = $(this).val();
-                console.log("click boton "+idDept)
-            })
         })
         function loadDepartamentos(){
             let request = "webresources/departamentos"
             $.getJSON(url + request, function(data) {
                 console.log("leyendo...")
-                var html = "";
+                $("#listadepartamentos").html("");
                 $.each(data, function(index, departamento){
-                    html += "<li>" + departamento.nombre + "</li>"
-                    var boton = $("<button>", {text: departamento.nombre, "data-id": departamento.numero, value: departamento.numero});
-                    $(html).append(boton);//fallo
+                    var li = $("<li>").text(departamento.nombre + " ");
+                    var boton = $("<button>", {text: "Eliminar dept " + departamento.numero, value: departamento.numero});
+                    li.append(boton);
+                    $("#listadepartamentos").append(li);
+                    
+                    boton.click(function(){
+                        var idDept = $(this).val();
+                        console.log("click boton "+idDept)
+                        var request = "webresources/departamentos/delete/" + idDept;
+                        $.ajax({
+                            url: url + request,
+                            type: "DELETE",
+                            success: function(){
+                                console.log("Eliminado correctamente");
+                                loadDepartamentos();
+                            }
+                        })
+                    })
                 })
-                $("#listadepartamentos").html(html);
             })
         }
     </script>
