@@ -178,8 +178,20 @@
         </div>
     </nav>
     <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <h1>Navbar example</h1>
+        <div><!-- class="bg-body-tertiary p-5 rounded" -->
+            <h1>Create</h1>
+            <h2 id="mensaje"></h2>
+            <label>Id Hospital</label>
+            <input type="text" id="cajaid" class="form-control"/><br/>
+            <label>Nombre</label>
+            <input type="text" id="cajanombre" class="form-control"/><br/>
+            <label>Dirección</label>
+            <input type="text" id="cajadireccion" class="form-control"/><br/>
+            <label>Teléfono</label>
+            <input type="text" id="cajatelefono" class="form-control"/><br/>
+            <label>Número de camas</label>
+            <input type="text" id="cajacamas" class="form-control"/><br/>
+            <button id="botoninsertar" class="btn btn-info">Insertar Hospital</button>
             
         </div>
     </main>
@@ -191,9 +203,38 @@
         //Tendremos la posibilidad de pulsar sobre un determinado hospital y ver sus detalles en otra página y modificar sus datos. (details.html)
         //Podremos eliminar un hospital desde home
         //Todas las páginas las denominamos web28...
-        
+        let url = "https://apicrudhospital.azurewebsites.net/"
         $(document).ready(function(){
-            
+            $("#botoninsertar").click(function(){
+                var requestPost = "webresources/hospitales/post"
+
+                var id = parseInt($("#cajaid").val());
+                var nombre = $("#cajanombre").val();
+                var direccion = $("#cajadireccion").val();
+                var telefono = $("#cajatelefono").val();
+                var camas = parseInt($("#cajacamas").val());
+                //CREAMOS UN NUEVO OBJETO HOSPITAL
+                var hospital = new Object();
+                hospital.idhospital = id;
+                hospital.nombre = nombre;
+                hospital.direccion = direccion;
+                hospital.telefono = telefono;
+                hospital.camas = camas;
+                //CONVERTIMOS EL OBJETO A JSON
+                var hospitalJSON = JSON.stringify(hospital);
+                console.log(hospitalJSON);
+
+                $.ajax({
+                    url: url + requestPost,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: hospitalJSON,
+                    success: function(){
+                        // $("#mensaje").text("Hospital insertado");
+                        window.location.href = "web28homehospitales.html"
+                    }
+                })
+            })
         })
     </script>
 </body>

@@ -178,9 +178,10 @@
         </div>
     </nav>
     <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <h1>Navbar example</h1>
-            
+        <div>
+         <!-- class="bg-body-tertiary p-5 rounded" -->
+            <h1>Hospital Details</h1>
+            <ul id="hospitaldetail" class="list-group"></ul>
         </div>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
@@ -191,9 +192,33 @@
         //Tendremos la posibilidad de pulsar sobre un determinado hospital y ver sus detalles en otra página y modificar sus datos. (details.html)
         //Podremos eliminar un hospital desde home
         //Todas las páginas las denominamos web28...
-        
+        let url = "https://apicrudhospital.azurewebsites.net/";
         $(document).ready(function(){
-            
+            var params = new window.URLSearchParams(window.location.search);
+            var idHospital = params.get("idhospital");
+            console.log("Id Hospital: " + idHospital);
+            var requestFind = "webresources/hospitales/" + idHospital;
+            $.ajax({
+                url: url + requestFind,
+                type: "GET",
+                success: function(data){
+                    console.log("detalles recogidos");
+                    var html = "";
+                    html += "<li class='list-group-item'>";
+                        html += data.nombre;
+                    html += "</li>";
+                    html += "<li class='list-group-item'>";
+                        html += data.direccion;
+                    html += "</li>";
+                    html += "<li class='list-group-item'>";
+                        html += data.telefono;
+                    html += "</li>";
+                    html += "<li class='list-group-item'>";
+                        html += data.camas;
+                    html += "</li>";
+                    $("#hospitaldetail").html(html);
+                }
+            })
         })
     </script>
 </body>
