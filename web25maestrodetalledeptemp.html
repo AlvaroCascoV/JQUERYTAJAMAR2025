@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maestro detalle departamentos empleados</title>
+</head>
+<body>
+    
+    <h1>Maestro detalle departamentos empleados</h1>
+    <ul id="listadepartamentos"></ul>
+    <table id="tablaempleados" border="1">
+        <thead>
+            <tr>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+                <th>Departamento</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        //Tenemos una url con datos de empleados, cada empleado tiene un numero de departamento
+        //asociado que indica en que departamento trabaja.
+
+        //Necesito combinar el api Departamentos con el api de Empleados 
+
+        let urlEmpleados = "https://apiempleadosspgs.azurewebsites.net/";
+        let urlDepartamentos = "https://apicruddepartamentospgs.azurewebsites.net/";
+        $(document).ready(function(){
+            loadDepartamentos();
+
+        })
+        function loadDepartamentos(){
+            let requestDepartamentos = "webresources/departamentos"
+            $.getJSON(urlDepartamentos + requestDepartamentos, function(data){
+                console.log("leyendo")
+                $("#listadepartamentos").html("");
+                $.each(data, function(index, departamento){
+                    var li = $("<li>").text(departamento.nombre + " ");
+                    var boton = $("<button>", {text: "Empleados ", value: departamento.numero});
+                    li.append(boton);
+                    $("#listadepartamentos").append(li);
+
+                    boton.click(function(){
+                        var idDept = $(this).val();
+                        console.log("click boton "+idDept)
+                        let requestEmpleados = "api/Empleados/EmpleadosDepartamento/"+idDept;
+
+                        $.ajax({
+                            url: urlEmpleados+requestEmpleados,
+                            type: "get",
+                            success: function(data){
+                                console.log("leyendo empleados")
+                                var html ="";
+                                $.each(data, function(index, empleado){
+                                    html+="<tr>";
+                                    html+= "<td>"+empleado.apellido+ "</td>";
+                                    html+= "<td>"+empleado.oficio+ "</td>";
+                                    html+= "<td>"+empleado.salario+ "</td>";
+                                    html+= "<td>"+empleado.departamento+ "</td>";
+                                    html+="</tr>";
+                                })
+                                $("#tablaempleados tbody").html(html);
+                            }
+                        })
+                    })
+                })
+            })
+        }
+    </script>
+</body>
+</html>
