@@ -204,16 +204,16 @@
                 success: function(data){
                     console.log("detalles recogidos");
                     var html = "";
-                    html += "<li class='list-group-item'>";
+                    html += "<li class='list-group-item'>Nombre: ";
                         html += data.nombre;
                     html += "</li>";
-                    html += "<li class='list-group-item'>";
+                    html += "<li class='list-group-item'>Direccion: ";
                         html += data.direccion;
                     html += "</li>";
-                    html += "<li class='list-group-item'>";
+                    html += "<li class='list-group-item'>Telefono: ";
                         html += data.telefono;
                     html += "</li>";
-                    html += "<li class='list-group-item'>";
+                    html += "<li class='list-group-item'> Camas: ";
                         html += data.camas;
                     html += "</li>";
                     $("#hospitaldetail").html(html);
