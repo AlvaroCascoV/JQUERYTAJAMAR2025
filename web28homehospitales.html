@@ -217,7 +217,9 @@
                         loadHospitales();
                     }
                 })
-            }
+            }else {
+                loadHospitales()
+            };
 
             function loadHospitales(){
                 let request = "webresources/hospitales";
